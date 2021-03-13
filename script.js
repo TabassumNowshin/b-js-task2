@@ -35,6 +35,20 @@ class UI {
     document.querySelector("#author").value = "";
     document.querySelector('#isbn').value = "";
   }
+
+  showAlert(message, className) {
+    let div = document.createElement('div');
+    div.className = `alert ${className}`;
+    div.appendChild(document.createTextNode(message));
+
+    let container = document.querySelector(".container");
+    let form = document.querySelector("#book-form");
+    container.insertBefore(div, form);
+
+    setTimeout( () => {
+      document.querySelector(".alert").remove();
+    }, 3000); 
+  }
 }
 
 // add event listener
@@ -48,13 +62,20 @@ function newBook(e) {
 
   let title = document.querySelector('#title').value, author = document.querySelector("#author").value, isbn = document.querySelector('#isbn').value;
 
-  // create a new object of book class from the input info
-  let book = new Book(title, author, isbn);
-
   let ui = new UI();
 
-  // pass that object to the ui class to add it to the table via ui.addToBookList() method
-  ui.addToBookList(book);
+  if (title === '' || author === '' || isbn === '') {
+    ui.showAlert("Please fill up all the fields!", "error");    
 
-  ui.clearFields();
+  } else {
+    
+    let book = new Book(title, author, isbn);
+
+    ui.addToBookList(book);
+    
+    ui.clearFields();
+    
+    ui.showAlert("Book Added!", "success");
+  }
+
 }
