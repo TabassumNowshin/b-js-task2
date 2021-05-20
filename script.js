@@ -15,12 +15,10 @@ class Book {
 
 
 //UI class
+//since we don't need constuctor we might as well make the functions static. that we can access them directly without creating an object to the class.
 class UI {
-  constructor() {
 
-  }
-
-  addToBookList(book) {
+  static addToBookList(book) {
     let list = document.querySelector('#book-list');
     let tr = document.createElement('tr');
     tr.innerHTML = `
@@ -31,13 +29,13 @@ class UI {
     list.appendChild(tr);
   }
 
-  clearFields() {
+  static clearFields() {
     document.querySelector('#title').value = "";
     document.querySelector("#author").value = "";
     document.querySelector('#isbn').value = "";
   }
 
-  showAlert(message, className) {
+  static showAlert(message, className) {
     let div = document.createElement('div');
     div.className = `alert ${className}`;
     div.appendChild(document.createTextNode(message));
@@ -51,9 +49,10 @@ class UI {
     }, 3000); 
   }
 
-  deleteFromBook(target){
+  static deleteFromBook(target){
     if (target.hasAttribute("href")) {
       target.parentElement.parentElement.remove();
+      UI.showAlert("Book Removed!", "success");
     }
   }
 }
@@ -69,20 +68,18 @@ function newBook(e) {
 
   let title = document.querySelector('#title').value, author = document.querySelector("#author").value, isbn = document.querySelector('#isbn').value;
 
-  let ui = new UI();
-
   if (title === '' || author === '' || isbn === '') {
-    ui.showAlert("Please fill up all the fields!", "error");    
+    UI.showAlert("Please fill up all the fields!", "error");    
 
   } else {
     
     let book = new Book(title, author, isbn);
 
-    ui.addToBookList(book);
+    UI.addToBookList(book);
     
-    ui.clearFields();
+    UI.clearFields();
     
-    ui.showAlert("Book Added!", "success");
+    UI.showAlert("Book Added!", "success");
   }
 
 }
@@ -90,8 +87,5 @@ function newBook(e) {
 function removeBook(e) {
   e.preventDefault();
 
-  let ui = new UI;
-
-  ui.deleteFromBook(e.target);
-  ui.showAlert("Book Removed!", "success");
+  UI.deleteFromBook(e.target);
 }
